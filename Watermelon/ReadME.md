@@ -1,71 +1,76 @@
-# A. Way Too Long Words
+# A. Watermelon
 
 **Time limit per test:** 1 second  
-**Memory limit per test:** 256 megabytes
+**Memory limit per test:** 64 megabytes
 
 ## Problem Statement
 
-Sometimes some words like "localization" or "internationalization" are so long that writing them many times in one text is quite tiresome.
+One hot summer day Pete and his friend Billy decided to buy a watermelon. They chose the biggest and the ripest one, in their opinion. After that the watermelon was weighed, and the scales showed *w* kilos. They rushed home, dying of thirst, and decided to divide the berry, however they faced a hard problem.
 
-Let's consider a word *too long*, if its length is **strictly more** than 10 characters. All too long words should be replaced with a special abbreviation.
-
-This abbreviation is made like this: we write down the first and the last letter of a word and between them we write the number of letters between the first and the last letters. That number is in decimal system and doesn't contain any leading zeroes.
-
-Thus, "localization" will be spelt as "l10n", and "internationalization" will be spelt as "i18n".
-
-You are suggested to automatize the process of changing the words with abbreviations. At that all too long words should be replaced by the abbreviation and the words that are not too long should not undergo any changes.
+Pete and Billy are great fans of even numbers, that's why they want to divide the watermelon in such a way that each of the two parts weighs even number of kilos, at the same time it is not obligatory that the parts are equal. The boys are extremely tired and want to start their meal as soon as possible, that's why you should help them and find out, if they can divide the watermelon in the way they want. For sure, each of them should get a part of positive weight.
 
 ### Input
-The first line contains an integer *n* (1 ≤ *n* ≤ 100). Each of the following *n* lines contains one word. All the words consist of lowercase Latin letters and possess the lengths of from 1 to 100 characters.
+The first (and the only) input line contains integer number *w* (1 ≤ *w* ≤ 100) — the weight of the watermelon bought by the boys.
 
 ### Output
-Print *n* lines. The *i*-th line should contain the result of replacing of the *i*-th word from the input data.
+Print YES, if the boys can divide the watermelon into two parts, each of them weighing even number of kilos; and NO in the opposite case.
 
 ### Example
 
 **Input:**
 ```
-4
-word
-localization
-internationalization
-pneumonoultramicroscopicsilicovolcanoconiosis
+8
 ```
 
 **Output:**
 ```
-word
-l10n
-i18n
-p43s
+YES
 ```
+
+**Note:**
+For example, the boys can divide the watermelon into two parts of 2 and 6 kilos respectively (another variant — two parts of 4 and 4 kilos).
 
 ## Solution
 
-### Algorithm Explanation
+### Problem Analysis
 
-The solution involves checking each word's length and applying the abbreviation rule when necessary:
+The key insight is that we need to divide a watermelon of weight `w` into two parts where:
+1. Both parts have even weights
+2. Both parts have positive weights (greater than 0)
 
-1. **Read the number of words** `n`
-2. **For each word:**
-   - If the word length is ≤ 10 characters, keep it unchanged
-   - If the word length is > 10 characters, create abbreviation:
-     - Take the first character
-     - Calculate the number of characters between first and last (length - 2)
-     - Take the last character
-     - Combine them as: `first + count + last`
+Let's think about this mathematically:
+- If we have two even numbers `a` and `b`, their sum `a + b` is always even
+- So if `w` is odd, it's impossible to divide it into two even parts
+- If `w` is even and `w > 2`, we can always find a valid division
+- If `w = 2`, the only division would be `1 + 1`, but 1 is odd, so it's invalid
 
-### Key Points
+### Algorithm
 
-- **Condition Check:** Words with length > 10 characters are abbreviated
-- **Abbreviation Format:** `first_letter + middle_count + last_letter`
-- **Middle Count Calculation:** `word.length() - 2` (excluding first and last characters)
-- **Edge Cases:** Words with 10 or fewer characters remain unchanged
+The solution is surprisingly simple:
+1. Check if `w` is even AND greater than 2
+2. If yes, print "YES"
+3. Otherwise, print "NO"
+
+### Why This Works
+
+- **Case 1: w is odd** → Impossible (sum of two even numbers cannot be odd)
+- **Case 2: w = 2** → Only division is 1+1, but 1 is odd → Impossible
+- **Case 3: w is even and w > 2** → Always possible
+  - Example: w = 4 → 2 + 2 ✓
+  - Example: w = 6 → 2 + 4 ✓
+  - Example: w = 8 → 2 + 6 or 4 + 4 ✓
+
+### Test Cases
+
+| Input | Output | Explanation |
+|-------|--------|-------------|
+| 8 | YES | Can be divided as 2+6 or 4+4 |
+| 2 | NO | Only division is 1+1, but 1 is odd |
+| 3 | NO | Odd number cannot be sum of two even numbers |
+| 4 | YES | Can be divided as 2+2 |
 
 ### Time Complexity
-- **O(n)** where n is the number of words, as we process each word once
+- **O(1)** - Simple arithmetic operations
 
 ### Space Complexity
-- **O(1)** additional space, not counting input storage
-
-This solution efficiently handles the word abbreviation requirements and works within the given constraints.
+- **O(1)** - Only using a few variables
